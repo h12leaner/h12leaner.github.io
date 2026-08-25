@@ -53,7 +53,6 @@
   support strategies.</p>
 </section>
 
-<!-- the numbers stand on the table -->
 <section class="stats-wrap" aria-label="Headline results">
   <div class="stats">
     <div class="stat"><b>+20<i>cm</i></b><span>reach beyond the<br>standing workspace</span></div>
@@ -64,54 +63,37 @@
 </section>
 
 <section class="col">
-  <h2>The contact is discovered, not scripted</h2>
-  <p class="serif">A cross-entropy sampling planner rolls out 20 candidate control splines through
-  MuJoCo at ~34&nbsp;Hz over a 1&nbsp;s horizon. No contact sequence is ever specified: a soft
-  <em>brace objective</em> biases the optimizer toward seating the forearm on the table, but the
-  realized contact mode, timing, and loading are outcomes of the rolled-out dynamics. Even with the
-  brace objective removed entirely, the planner discovers light upper-body support on its own
-  (19&ndash;39&nbsp;N through the gripper). The objective converts that tendency into a
-  repeatable, flat, heavily loaded forearm contact that survives real-world physics.</p>
+  <h2>Results</h2>
 
   <figure class="wide">
     <img src="assets/fig_strip.png" alt="Three rows of frames: simulated max reach without a brace objective, simulated max reach with a brace objective, and the real robot performing the braced max reach">
-    <figcaption class="mono">Max reach without a brace objective (sim), with one (sim), and on hardware.
-    Labels show bracing-arm load. The hardware stands 11&nbsp;cm farther from the table than in simulation.</figcaption>
+    <figcaption><b>Emergent bracing.</b> A cross-entropy sampling planner rolls out 20 candidate
+    controls through MuJoCo at ~34&nbsp;Hz over a 1&nbsp;s horizon; no contact sequence is ever
+    specified. Top: simulated max reach with no brace objective, where the planner discovers light
+    upper-body support on its own (42&nbsp;N through the gripper). Middle: a soft brace objective
+    converts that tendency into a flat, heavily loaded forearm contact (105&nbsp;N). Bottom: the
+    braced max reach on the real Unitree H1-2 (109&nbsp;&plusmn;&nbsp;28&nbsp;N). The hardware
+    stands 11&nbsp;cm farther from the table edge than in simulation.</figcaption>
   </figure>
-</section>
-
-<section class="col">
-  <h2>Measured, not just demonstrated</h2>
-  <p class="serif">Across targeted-reach and max-reach tasks we measure functional reach, support
-  margin, trajectory smoothness (SPARC), high-frequency hand jitter, and bracing-arm contact force,
-  in simulation with and without the brace objective, and on hardware. Simulation and
-  hardware agree closely on the quantities that matter for stability: bracing roughly doubles the
-  support margin at comparable reach (16.1&nbsp;&plusmn;&nbsp;1.1&nbsp;cm on hardware), and hardware
-  brace loads (108&ndash;109&nbsp;N) sit near the top of the simulated braced range.</p>
 
   <figure class="wide">
     <img src="assets/fig_panels.png" alt="Five bar-chart panels comparing reach, support margin, smoothness, hand jitter, and bracing-arm force across simulation and hardware">
-    <figcaption class="mono">Reach, stability, motion quality, and brace loading over successful runs.
-    Blue: sim, no brace cost. Orange: sim, brace encouraged. Green: hardware.</figcaption>
+    <figcaption><b>Reach, stability, motion quality, and brace loading in successful runs.</b>
+    Blue: simulation without a brace objective; orange: simulation with brace-encouraging costs;
+    green: hardware. Bracing roughly doubles the support margin at comparable reach
+    (16.1&nbsp;&plusmn;&nbsp;1.1&nbsp;cm on hardware), and hardware brace loads
+    (108&ndash;109&nbsp;N) sit near the top of the simulated braced range. Hardware hand-jitter
+    bars include state-estimation noise absent from simulation.</figcaption>
   </figure>
-</section>
 
-<section class="col">
-  <h2>Centimeter-level precision at a one-meter reach</h2>
-  <div class="split">
-    <div>
-      <p class="serif">We command the gripper tip to a fixed Cartesian target 0.55&nbsp;m past the
-      table edge and require a sustained 5&nbsp;s hold. Across 10 consecutive autonomous trials the
-      mean placement error is <b>5.3&nbsp;&plusmn;&nbsp;0.9&nbsp;cm</b>: unbiased along the
-      reach axis (0.0&nbsp;&plusmn;&nbsp;1.7&nbsp;cm), with a repeatable lateral offset of
-      3.9&nbsp;cm. The error is a stable, calibratable bias: within each hold the tip is steady to
-      under a centimeter.</p>
-    </div>
-    <figure>
-      <img src="assets/fig_precision.png" alt="Ensemble plot of gripper tip error in x, y, and z during the five-second hold across ten trials">
-      <figcaption class="mono">Tip error during the 5&nbsp;s hold (n=10): mean &plusmn;1&nbsp;s.d. per axis.</figcaption>
-    </figure>
-  </div>
+  <figure class="fig-narrow">
+    <img src="assets/fig_precision.png" alt="Ensemble plot of gripper tip error in x, y, and z during the five-second hold across ten trials">
+    <figcaption><b>Target precision.</b> Gripper-tip error during the commanded 5&nbsp;s hold at a
+    fixed Cartesian target 0.55&nbsp;m past the table edge, across 10 consecutive autonomous
+    trials: 5.3&nbsp;&plusmn;&nbsp;0.9&nbsp;cm mean error, unbiased along the reach axis
+    (0.0&nbsp;&plusmn;&nbsp;1.7&nbsp;cm) with a repeatable 3.9&nbsp;cm lateral offset. Within each
+    hold the tip is steady to under a centimeter.</figcaption>
+  </figure>
 </section>
 
 </main>

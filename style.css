@@ -198,11 +198,16 @@ section p + p { margin-top: 0.9rem; }
 figure { margin-top: 1.6rem; }
 figure img { width: 100%; display: block; border-radius: 6px; }
 figcaption {
-  font-size: clamp(0.76rem, 0.7rem + 0.15vw, 0.85rem);
-  color: var(--mute);
-  margin-top: 0.55rem;
-  line-height: 1.5;
+  font-size: clamp(0.82rem, 0.74rem + 0.22vw, 0.98rem);
+  color: #AEB6C2;
+  margin-top: 0.7rem;
+  line-height: 1.65;
+  font-family: "Source Serif 4", Georgia, serif;
 }
+figcaption b { color: var(--ink); }
+.fig-narrow { max-width: 680px; margin-left: auto; margin-right: auto; }
+.fig-narrow img { background: var(--card); border-radius: 8px; padding: 0.9rem; box-shadow: 0 14px 34px -16px rgba(0,0,0,0.6); }
+section figure + figure { margin-top: 3rem; }
 
 /* figures that breathe past the text column */
 .col figure.wide {
