@@ -117,7 +117,7 @@ a:focus-visible, .btn:focus-visible {
 .hero-media img, .hero-media video {
   width: 100%;
   display: block;
-  border-radius: 10px 10px 0 0;
+  border-radius: 10px;
   border: 1px solid var(--line);
   border-bottom: none;
   box-shadow: 0 22px 48px -18px rgba(0, 0, 0, 0.65);

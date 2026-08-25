@@ -34,23 +34,11 @@
         <source src="assets/lean_reach.mp4" type="video/mp4">
       </video> -->
       <img src="assets/teaser.png" alt="Unitree H1-2 humanoid leaning onto a table with its forearm while reaching across it, shown in five stages">
-      <figcaption class="mono">The Unitree H1-2 holds the braced 1&nbsp;m reach (frame&nbsp;3) &mdash; 20&nbsp;cm past its standing workspace &mdash; for over four minutes.</figcaption>
+      <figcaption class="mono">The Unitree H1-2 holds the braced 1&nbsp;m reach (frame&nbsp;3) &mdash; 20&nbsp;cm past its standing workspace &mdash; for over four minutes. One autonomous hardware trial, t&nbsp;=&nbsp;0&#8202;&ndash;&#8202;30&nbsp;s.</figcaption>
     </figure>
   </div>
-  <div class="table-line" aria-hidden="true"></div>
 </header>
 
-<!-- pipeline strip: the actual sequence -->
-<section class="phases" aria-label="Pipeline stages">
-  <ol class="phase-strip">
-    <li><img src="assets/phase_0.png" alt="Robot standing at the table"><span class="mono">stand</span></li>
-    <li><img src="assets/phase_1.png" alt="Robot beginning to lean forward"><span class="mono">lean</span></li>
-    <li><img src="assets/phase_2.png" alt="Robot braced on its forearm, reaching across the table"><span class="mono">brace&nbsp;+&nbsp;reach</span></li>
-    <li><img src="assets/phase_3.png" alt="Robot pushing off the table"><span class="mono">recover</span></li>
-    <li><img src="assets/phase_4.png" alt="Robot standing free again"><span class="mono">stand</span></li>
-  </ol>
-  <p class="phase-note mono">one autonomous hardware trial &middot; t = 0&#8202;&ndash;&#8202;45&nbsp;s</p>
-</section>
 
 <main>
 
@@ -76,7 +64,6 @@
     <div class="stat"><b>5.3<i>cm</i></b><span>steady-state precision<br>(&plusmn;0.9, n=10)</span></div>
     <div class="stat"><b>73<i>%</i></b><span>sim-to-real success<br>at max reach (11/15)</span></div>
   </div>
-  <div class="table-line" aria-hidden="true"></div>
 </section>
 
 <section class="col">
@@ -133,26 +120,8 @@
 </main>
 
 <footer>
-  <div class="table-line" aria-hidden="true"></div>
   <p class="mono">Anonymous Authors &middot; under double-blind review &middot; 2026</p>
 </footer>
 
-<script>
-// one motion moment: the phase strip reveals in sequence
-if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  const items = document.querySelectorAll('.phase-strip li');
-  const obs = new IntersectionObserver((es) => {
-    es.forEach(e => {
-      if (e.isIntersecting) {
-        items.forEach((li, i) => setTimeout(() => li.classList.add('in'), i * 140));
-        obs.disconnect();
-      }
-    });
-  }, { threshold: 0.3 });
-  if (items.length) obs.observe(items[0]);
-} else {
-  document.querySelectorAll('.phase-strip li').forEach(li => li.classList.add('in'));
-}
-</script>
 </body>
 </html>
