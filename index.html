@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leaning Over to Reach Far-Away Objects</title>
+<meta name="description" content="Sampling-based contact-implicit MPC for whole-body leaning, bracing, reaching, and recovery on a Unitree H1-2 humanoid.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#129470;</text></svg>">
+</head>
+<body>
+
+<header class="hero">
+  <div class="col">
+    <p class="eyebrow mono">Anonymous Authors &middot; Under double-blind review</p>
+    <h1>Leaning Over to Reach<br>Far&#8209;Away Objects</h1>
+    <p class="subtitle">Whole-body supported reaching on a humanoid: lean on the table, reach past the
+    standing workspace, push back up &mdash; with the bracing contact discovered by the controller,
+    not scripted.</p>
+    <nav class="links">
+      <a class="btn" href="paper.pdf"><span class="btn-ico">&#9660;</span> Paper (PDF)</a>
+      <a class="btn" href="#video"><span class="btn-ico">&#9654;</span> Video</a>
+      <span class="btn btn-soon" title="Code released upon publication">&lt;/&gt; Code &mdash; coming soon</span>
+    </nav>
+  </div>
+
+  <!-- hero media rests on the table line -->
+  <div class="on-table">
+    <figure class="hero-media" id="video">
+      <!-- VIDEO SLOT: when the mp4 lands in assets/, replace the <img> with:
+      <video controls playsinline preload="metadata" poster="assets/teaser.png">
+        <source src="assets/lean_reach.mp4" type="video/mp4">
+      </video> -->
+      <img src="assets/teaser.png" alt="Unitree H1-2 humanoid leaning onto a table with its forearm while reaching across it, shown in five stages">
+      <figcaption class="mono">The Unitree H1-2 holds the braced 1&nbsp;m reach (frame&nbsp;3) &mdash; 20&nbsp;cm past its standing workspace &mdash; for over four minutes.</figcaption>
+    </figure>
+  </div>
+  <div class="table-line" aria-hidden="true"></div>
+</header>
+
+<!-- pipeline strip: the actual sequence -->
+<section class="phases" aria-label="Pipeline stages">
+  <ol class="phase-strip">
+    <li><img src="assets/phase_0.png" alt="Robot standing at the table"><span class="mono">stand</span></li>
+    <li><img src="assets/phase_1.png" alt="Robot beginning to lean forward"><span class="mono">lean</span></li>
+    <li><img src="assets/phase_2.png" alt="Robot braced on its forearm, reaching across the table"><span class="mono">brace&nbsp;+&nbsp;reach</span></li>
+    <li><img src="assets/phase_3.png" alt="Robot pushing off the table"><span class="mono">recover</span></li>
+    <li><img src="assets/phase_4.png" alt="Robot standing free again"><span class="mono">stand</span></li>
+  </ol>
+  <p class="phase-note mono">one autonomous hardware trial &middot; t = 0&#8202;&ndash;&#8202;45&nbsp;s</p>
+</section>
+
+<main>
+
+<section class="col">
+  <h2>Abstract</h2>
+  <p class="serif">Humanoid athleticism requires precise whole-body control under sustained load and
+  contact, not only rapid motion. We study <em>supported reaching</em>: extending workspace by bracing
+  against the environment rather than stepping. We present a sampling-based, contact-implicit MPC
+  framework for whole-body leaning, bracing, reaching, and recovery on a Unitree H1-2 humanoid, with
+  contact timing and forces emerging from MuJoCo rollouts rather than a prescribed schedule. The
+  controller transfers sim-to-real, extends reach by approximately 20&nbsp;cm beyond the unbraced
+  standing workspace, sustains the loaded posture for over four minutes, and achieves
+  5.3&nbsp;&plusmn;&nbsp;0.9&nbsp;cm mean steady-state error. We further characterize stability,
+  contact loading, and end-effector precision, and analyze failure modes arising from alternative
+  support strategies.</p>
+</section>
+
+<!-- the numbers stand on the table -->
+<section class="stats-wrap" aria-label="Headline results">
+  <div class="stats">
+    <div class="stat"><b>+20<i>cm</i></b><span>reach beyond the<br>standing workspace</span></div>
+    <div class="stat"><b>4<i>+ min</i></b><span>loaded posture<br>sustained</span></div>
+    <div class="stat"><b>5.3<i>cm</i></b><span>steady-state precision<br>(&plusmn;0.9, n=10)</span></div>
+    <div class="stat"><b>73<i>%</i></b><span>sim-to-real success<br>at max reach (11/15)</span></div>
+  </div>
+  <div class="table-line" aria-hidden="true"></div>
+</section>
+
+<section class="col">
+  <h2>The contact is discovered, not scripted</h2>
+  <p class="serif">A cross-entropy sampling planner rolls out 20 candidate control splines through
+  MuJoCo at ~34&nbsp;Hz over a 1&nbsp;s horizon. No contact sequence is ever specified: a soft
+  <em>brace objective</em> biases the optimizer toward seating the forearm on the table, but the
+  realized contact mode, timing, and loading are outcomes of the rolled-out dynamics. Even with the
+  brace objective removed entirely, the planner discovers light upper-body support on its own
+  (19&ndash;39&nbsp;N through the gripper) &mdash; the objective converts that tendency into a
+  repeatable, flat, heavily loaded forearm contact that survives real-world physics.</p>
+
+  <figure class="wide">
+    <img src="assets/fig_strip.png" alt="Three rows of frames: simulated max reach without a brace objective, simulated max reach with a brace objective, and the real robot performing the braced max reach">
+    <figcaption class="mono">Max reach without a brace objective (sim), with one (sim), and on hardware.
+    Labels show bracing-arm load. The hardware stands 11&nbsp;cm farther from the table than in simulation.</figcaption>
+  </figure>
+</section>
+
+<section class="col">
+  <h2>Measured, not just demonstrated</h2>
+  <p class="serif">Across targeted-reach and max-reach tasks we measure functional reach, support
+  margin, trajectory smoothness (SPARC), high-frequency hand jitter, and bracing-arm contact force
+  &mdash; in simulation with and without the brace objective, and on hardware. Simulation and
+  hardware agree closely on the quantities that matter for stability: bracing roughly doubles the
+  support margin at comparable reach (16.1&nbsp;&plusmn;&nbsp;1.1&nbsp;cm on hardware), and hardware
+  brace loads (108&ndash;109&nbsp;N) sit near the top of the simulated braced range.</p>
+
+  <figure class="wide">
+    <img src="assets/fig_panels.png" alt="Five bar-chart panels comparing reach, support margin, smoothness, hand jitter, and bracing-arm force across simulation and hardware">
+    <figcaption class="mono">Reach, stability, motion quality, and brace loading over successful runs.
+    Blue: sim, no brace cost. Orange: sim, brace encouraged. Green: hardware.</figcaption>
+  </figure>
+</section>
+
+<section class="col">
+  <h2>Centimeter-level precision at a one-meter reach</h2>
+  <div class="split">
+    <div>
+      <p class="serif">We command the gripper tip to a fixed Cartesian target 0.55&nbsp;m past the
+      table edge and require a sustained 5&nbsp;s hold. Across 10 consecutive autonomous trials the
+      mean placement error is <b>5.3&nbsp;&plusmn;&nbsp;0.9&nbsp;cm</b> &mdash; unbiased along the
+      reach axis (0.0&nbsp;&plusmn;&nbsp;1.7&nbsp;cm), with a repeatable lateral offset of
+      3.9&nbsp;cm. The error is a stable, calibratable bias: within each hold the tip is steady to
+      under a centimeter.</p>
+    </div>
+    <figure>
+      <img src="assets/fig_precision.png" alt="Ensemble plot of gripper tip error in x, y, and z during the five-second hold across ten trials">
+      <figcaption class="mono">Tip error during the 5&nbsp;s hold (n=10): mean &plusmn;1&nbsp;s.d. per axis.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="col fail">
+  <h2>Why trials fail</h2>
+  <p class="serif">Failures are not falls at brace onset. They are a slow forward migration
+  <em>after</em> contact, tied to a distinct support geometry: successful trials fold the elbow into
+  a flat forearm contact and load it progressively to ~125&nbsp;N; failed trials extend the arm into
+  a column-like prop, slam to ~150&nbsp;N at onset, and drift past the recoverable region before an
+  emergency stop. The two groups separate completely in elbow angle
+  (+0.14&nbsp;&plusmn;&nbsp;0.08 vs &minus;0.45&nbsp;&plusmn;&nbsp;0.10&nbsp;rad) and in
+  shoulder-pitch torque sign &mdash; a proprioceptive signature visible seconds before collapse.</p>
+
+  <div class="fig-row">
+    <figure>
+      <img src="assets/fig_com_margin.png" alt="Center of mass support margin over phase-normalized time for successful and failed trials">
+      <figcaption class="mono">CoM margin vs the foot-only polygon, phase-normalized. Failures keep migrating forward.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/fig_force.png" alt="Reconstructed brace contact force over phase-normalized time for successful and failed trials">
+      <figcaption class="mono">Brace force from measured arm torques: progressive load vs slam-and-hold.</figcaption>
+    </figure>
+  </div>
+  <figure class="wide">
+    <img src="assets/fig_tau.png" alt="Bracing arm shoulder pitch and yaw torques for successful and failed trials, aligned to the seating instant">
+    <figcaption class="mono">Shoulder-pitch torque separates success (+10&nbsp;N&middot;m) from failure (&minus;20 to &minus;25&nbsp;N&middot;m).</figcaption>
+  </figure>
+</section>
+
+<section class="col">
+  <h2>Standing still, knowing where you are</h2>
+  <div class="split">
+    <figure>
+      <img src="assets/fig_est.png" alt="Reported base position over seven minutes while the robot is physically stationary, for three estimator variants">
+      <figcaption class="mono">Reported base position over 7&nbsp;min while physically stationary (star = truth).</figcaption>
+    </figure>
+    <div>
+      <p class="serif">Deployment uses no motion-capture. Proprioceptive odometry alone drifts
+      1.8&nbsp;m over 7&nbsp;minutes; fusing an AprilTag bundle on the table bounds the estimate
+      within millimeters per two-minute window &mdash; a 40&ndash;75&times; reduction &mdash; and
+      anchors the reach targets to the table frame throughout the lean.</p>
+    </div>
+  </div>
+</section>
+
+<section class="col">
+  <h2>BibTeX</h2>
+  <pre class="bibtex mono">@article{anonymous2026leaning,
+  title   = {Leaning Over to Reach Far-Away Objects},
+  author  = {Anonymous Authors},
+  note    = {Under double-blind review},
+  year    = {2026}
+}</pre>
+</section>
+
+</main>
+
+<footer>
+  <div class="table-line" aria-hidden="true"></div>
+  <p class="mono">Anonymous Authors &middot; under double-blind review &middot; 2026</p>
+</footer>
+
+<script>
+// one motion moment: the phase strip reveals in sequence
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const items = document.querySelectorAll('.phase-strip li');
+  const obs = new IntersectionObserver((es) => {
+    es.forEach(e => {
+      if (e.isIntersecting) {
+        items.forEach((li, i) => setTimeout(() => li.classList.add('in'), i * 140));
+        obs.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+  if (items.length) obs.observe(items[0]);
+} else {
+  document.querySelectorAll('.phase-strip li').forEach(li => li.classList.add('in'));
+}
+</script>
+</body>
+</html>
