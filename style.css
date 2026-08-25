@@ -114,6 +114,7 @@ a:focus-visible, .btn:focus-visible {
   max-width: 860px;
   margin: 0 auto;
 }
+.hero-media + .hero-media { margin-top: 1.6rem; }
 .hero-media img, .hero-media video {
   width: 100%;
   display: block;
