@@ -18,11 +18,11 @@
     <p class="eyebrow mono">Anonymous Authors &middot; Under double-blind review</p>
     <h1>Leaning Over to Reach<br>Far&#8209;Away Objects</h1>
     <p class="subtitle">Whole-body supported reaching on a humanoid: lean on the table, reach past the
-    standing workspace, push back up &mdash; with the bracing contact discovered by the controller,
+    standing workspace, push back up, with the bracing contact discovered by the controller,
     not scripted.</p>
     <nav class="links">
       <a class="btn" href="paper.pdf"><span class="btn-ico">&#9660;</span> Paper (PDF)</a>
-      <span class="btn btn-soon" title="Code released upon publication">&lt;/&gt; Code &mdash; coming soon</span>
+      <span class="btn btn-soon" title="Code released upon publication">&lt;/&gt; Code (coming soon)</span>
     </nav>
   </div>
 
@@ -34,7 +34,7 @@
         <source src="assets/lean_reach.mp4" type="video/mp4">
       </video> -->
       <img src="assets/teaser.png" alt="Unitree H1-2 humanoid leaning onto a table with its forearm while reaching across it, shown in five stages">
-      <figcaption class="mono">The Unitree H1-2 holds the braced 1&nbsp;m reach (frame&nbsp;3) &mdash; 20&nbsp;cm past its standing workspace &mdash; for over four minutes. One autonomous hardware trial, t&nbsp;=&nbsp;0&#8202;&ndash;&#8202;30&nbsp;s.</figcaption>
+      <figcaption class="mono">The Unitree H1-2 holds the braced 1&nbsp;m reach (frame&nbsp;3), 20&nbsp;cm past its standing workspace, for over four minutes. One autonomous hardware trial, t&nbsp;=&nbsp;0&#8202;&ndash;&#8202;30&nbsp;s.</figcaption>
     </figure>
   </div>
 </header>
@@ -73,7 +73,7 @@
   <em>brace objective</em> biases the optimizer toward seating the forearm on the table, but the
   realized contact mode, timing, and loading are outcomes of the rolled-out dynamics. Even with the
   brace objective removed entirely, the planner discovers light upper-body support on its own
-  (19&ndash;39&nbsp;N through the gripper) &mdash; the objective converts that tendency into a
+  (19&ndash;39&nbsp;N through the gripper). The objective converts that tendency into a
   repeatable, flat, heavily loaded forearm contact that survives real-world physics.</p>
 
   <figure class="wide">
@@ -86,8 +86,8 @@
 <section class="col">
   <h2>Measured, not just demonstrated</h2>
   <p class="serif">Across targeted-reach and max-reach tasks we measure functional reach, support
-  margin, trajectory smoothness (SPARC), high-frequency hand jitter, and bracing-arm contact force
-  &mdash; in simulation with and without the brace objective, and on hardware. Simulation and
+  margin, trajectory smoothness (SPARC), high-frequency hand jitter, and bracing-arm contact force,
+  in simulation with and without the brace objective, and on hardware. Simulation and
   hardware agree closely on the quantities that matter for stability: bracing roughly doubles the
   support margin at comparable reach (16.1&nbsp;&plusmn;&nbsp;1.1&nbsp;cm on hardware), and hardware
   brace loads (108&ndash;109&nbsp;N) sit near the top of the simulated braced range.</p>
@@ -105,7 +105,7 @@
     <div>
       <p class="serif">We command the gripper tip to a fixed Cartesian target 0.55&nbsp;m past the
       table edge and require a sustained 5&nbsp;s hold. Across 10 consecutive autonomous trials the
-      mean placement error is <b>5.3&nbsp;&plusmn;&nbsp;0.9&nbsp;cm</b> &mdash; unbiased along the
+      mean placement error is <b>5.3&nbsp;&plusmn;&nbsp;0.9&nbsp;cm</b>: unbiased along the
       reach axis (0.0&nbsp;&plusmn;&nbsp;1.7&nbsp;cm), with a repeatable lateral offset of
       3.9&nbsp;cm. The error is a stable, calibratable bias: within each hold the tip is steady to
       under a centimeter.</p>

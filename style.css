@@ -191,16 +191,6 @@ h2 {
   font-weight: 700;
   margin-bottom: 1rem;
 }
-h2::before {
-  content: "";
-  display: block;
-  width: 2.2rem;
-  height: 4px;
-  background: var(--accent);
-  border-radius: 2px;
-  margin-bottom: 0.9rem;
-}
-.fail h2::before { background: var(--fail); }
 
 section p + p { margin-top: 0.9rem; }
 
@@ -212,19 +202,17 @@ figcaption {
   margin-top: 0.55rem;
   line-height: 1.5;
 }
-.col figure.wide figcaption, .split figure figcaption, .fig-row figure figcaption {
-  color: #5A6270;
-}
 
 /* figures that breathe past the text column */
 .col figure.wide {
   width: min(var(--wide), 100vw - 2.5rem);
   margin-left: 50%;
   transform: translateX(-50%);
+}
+.col figure.wide img {
   background: var(--card);
-  border: none;
   border-radius: 8px;
-  padding: 1.1rem 1.1rem 0.9rem;
+  padding: 1.1rem;
   box-shadow: 0 14px 34px -16px rgba(0,0,0,0.6);
 }
 
@@ -235,7 +223,8 @@ figcaption {
   align-items: center;
   margin-top: 0.4rem;
 }
-.split figure { margin-top: 0; background: var(--card); border-radius: 8px; padding: 0.9rem; box-shadow: 0 14px 34px -16px rgba(0,0,0,0.6); }
+.split figure { margin-top: 0; }
+.split figure img { background: var(--card); border-radius: 8px; padding: 0.9rem; box-shadow: 0 14px 34px -16px rgba(0,0,0,0.6); }
 
 .fig-row {
   width: min(var(--wide), 100vw - 2.5rem);
