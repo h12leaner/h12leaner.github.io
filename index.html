@@ -48,7 +48,7 @@
   contact timing and forces emerging from MuJoCo rollouts rather than a prescribed schedule. The
   controller transfers sim-to-real, extends reach by approximately 20&nbsp;cm beyond the unbraced
   standing workspace, sustains the loaded posture for over four minutes, and achieves
-  5.3&nbsp;&plusmn;&nbsp;0.9&nbsp;cm mean steady-state error. We further characterize stability,
+  2.8&nbsp;&plusmn;&nbsp;1.3&nbsp;cm transverse tracking precision. We further characterize stability,
   contact loading, and end-effector precision, and analyze failure modes arising from alternative
   support strategies.</p>
 </section>
@@ -57,7 +57,7 @@
   <ul class="ledger">
     <li><span class="ledger-label">Reach beyond the standing workspace</span><span class="ledger-value">+20&thinsp;cm</span></li>
     <li><span class="ledger-label">Loaded posture sustained</span><span class="ledger-value">4+&thinsp;min</span></li>
-    <li><span class="ledger-label">Steady-state precision (&plusmn;0.9, n=10)</span><span class="ledger-value">5.3&thinsp;cm</span></li>
+    <li><span class="ledger-label">Transverse tracking precision (&plusmn;1.3, n=10)</span><span class="ledger-value">2.8&thinsp;cm</span></li>
     <li><span class="ledger-label">Sim-to-real success at max reach (11/15)</span><span class="ledger-value">73&thinsp;%</span></li>
   </ul>
 </section>
@@ -90,8 +90,7 @@
     <img src="assets/fig_precision.png" alt="Ensemble plot of gripper tip error in x, y, and z during the five-second hold across ten trials">
     <figcaption><b>Target precision.</b> Gripper-tip error during the commanded 5&nbsp;s hold at a
     fixed Cartesian target 0.55&nbsp;m past the table edge, across 10 consecutive autonomous
-    trials: 5.3&nbsp;&plusmn;&nbsp;0.9&nbsp;cm mean error, unbiased along the reach axis
-    (0.0&nbsp;&plusmn;&nbsp;1.7&nbsp;cm) with a repeatable 3.9&nbsp;cm lateral offset. Within each
+    trials: 2.8&nbsp;&plusmn;&nbsp;1.3&nbsp;cm transverse tracking precision. Within each
     hold the tip is steady to under a centimeter.</figcaption>
   </figure>
 </section>
