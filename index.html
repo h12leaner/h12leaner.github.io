@@ -16,10 +16,11 @@
 <header class="hero">
   <div class="col">
     <h1>Leaning Over to Reach<br>Far&#8209;Away Objects</h1>
-    <p class="subtitle">Whole-body supported reaching on a humanoid: lean on the table, reach past the
-    standing workspace, push back up, with the bracing contact discovered by the controller.</p>
+    <p class="subtitle">Whole-body supported reaching on a humanoid: lean on the table, brace on the forearm,
+    reach past the standing workspace, push back up. Contact timing and loading come out of the
+    planner's rollouts, not a prescribed contact schedule.</p>
     <nav class="links">
-      <a class="btn" href="paper.pdf"><span class="btn-ico">&#9660;</span> Paper (PDF)</a>
+      <a class="btn" href="paper.pdf?v=3"><span class="btn-ico">&#9660;</span> Paper (PDF)</a>
       <span class="btn btn-soon" title="Code released upon publication">&lt;/&gt; Code (coming soon)</span>
     </nav>
   </div>
@@ -30,7 +31,7 @@
       <video autoplay muted loop playsinline preload="auto">
         <source src="assets/lean_reach.mp4?v=2" type="video/mp4">
       </video>
-      <figcaption class="mono">The Unitree H1-2 holds the braced 1&nbsp;m reach, 20&nbsp;cm past its standing workspace, for over four minutes. One autonomous hardware trial, t&nbsp;=&nbsp;0&#8202;&ndash;&#8202;30&nbsp;s.</figcaption>
+      <figcaption class="mono">The Unitree H1-2 braces on the table and holds a 1.3&nbsp;m reach, more than 40&nbsp;cm past its standing workspace, for over four minutes. One autonomous hardware trial, t&nbsp;=&nbsp;0&#8202;&ndash;&#8202;30&nbsp;s.</figcaption>
     </figure>
   </div>
 </header>
@@ -40,24 +41,28 @@
 
 <section class="col">
   <h2>Abstract</h2>
-  <p class="serif">Humanoid athleticism requires precise whole-body control under sustained load and
-  contact, not only rapid motion. We study <em>supported reaching</em>: extending workspace by bracing
-  against the environment rather than stepping. We present a sampling-based, contact-implicit MPC
-  framework for whole-body leaning, bracing, reaching, and recovery on a Unitree H1-2 humanoid, with
-  contact timing and forces emerging from MuJoCo rollouts rather than a prescribed schedule. The
-  controller transfers sim-to-real, extends reach by approximately 20&nbsp;cm beyond the unbraced
-  standing workspace, sustains the loaded posture for over four minutes, and achieves
-  2.8&nbsp;&plusmn;&nbsp;1.3&nbsp;cm transverse tracking precision. We further characterize stability,
-  contact loading, and end-effector precision, and analyze failure modes arising from alternative
-  support strategies.</p>
+  <p class="serif">We study supported reaching to extend a humanoid robot's workspace by bracing against
+  the environment for stabilization using exclusively local sensing. While current solutions for
+  whole-body humanoid control aim at avoiding contact, contact is needed to reach objects that are
+  not directly placed at the edge of a table. We employ a sampling-based model-predictive control
+  (MPC) framework for whole-body leaning, bracing, reaching, and recovery on a Unitree H1-2 humanoid.
+  The controller runs in real time at 33&nbsp;Hz, transfers sim-to-real, extends reach by more than
+  40&nbsp;cm beyond the unbraced standing workspace, and sustains the loaded posture for over four
+  minutes, before pose estimation drifts. The controller reaches the commanded target in 89% of
+  trials and completes the full reach-and-recovery cycle in 81%, across 54 trials spanning six
+  targets and three table heights. We further characterize stability, contact loading, and
+  end-effector precision, and analyze failure modes and sampling-based planner sensitivity.</p>
 </section>
 
 <section class="col" aria-label="Headline results">
   <ul class="ledger">
-    <li><span class="ledger-label">Reach beyond the standing workspace</span><span class="ledger-value">+20&thinsp;cm</span></li>
+    <li><span class="ledger-label">Reach beyond the unbraced standing workspace</span><span class="ledger-value">+40&thinsp;cm</span></li>
     <li><span class="ledger-label">Loaded posture sustained</span><span class="ledger-value">4+&thinsp;min</span></li>
-    <li><span class="ledger-label">Transverse tracking precision (&plusmn;1.3, n=10)</span><span class="ledger-value">2.8&thinsp;cm</span></li>
-    <li><span class="ledger-label">Sim-to-real success at max reach (11/15)</span><span class="ledger-value">73&thinsp;%</span></li>
+    <li><span class="ledger-label">Commanded reaches completed (48/54, six targets &times; three table heights)</span><span class="ledger-value">89&thinsp;%</span></li>
+    <li><span class="ledger-label">Full reach-and-recovery cycles (44/54)</span><span class="ledger-value">81&thinsp;%</span></li>
+    <li><span class="ledger-label">Target accuracy, wrist-camera measured (&plusmn;0.9, n=48 holds)</span><span class="ledger-value">2.7&thinsp;cm</span></li>
+    <li><span class="ledger-label">Maximum-extent reaches completed on hardware (11/15)</span><span class="ledger-value">73&thinsp;%</span></li>
+    <li><span class="ledger-label">Planning rate, 20 rollouts over a 1&thinsp;s horizon, laptop CPU</span><span class="ledger-value">33&thinsp;Hz</span></li>
   </ul>
 </section>
 
@@ -65,32 +70,80 @@
   <h2>Results</h2>
 
   <figure class="wide">
-    <img src="assets/fig_strip.png" alt="Three rows of frames: simulated max reach without a brace objective, simulated max reach with a brace objective, and the real robot performing the braced max reach">
-    <figcaption><b>Emergent bracing.</b> A cross-entropy sampling planner rolls out 20 candidate
-    controls through MuJoCo at ~34&nbsp;Hz over a 1&nbsp;s horizon; no contact sequence is ever
-    specified. Top: simulated max reach with no brace objective, where the planner discovers light
-    upper-body support on its own (42&nbsp;N through the gripper). Middle: a soft brace objective
-    converts that tendency into a flat, heavily loaded forearm contact (105&nbsp;N). Bottom: the
-    braced max reach on the real Unitree H1-2 (109&nbsp;&plusmn;&nbsp;28&nbsp;N). The hardware
-    stands 11&nbsp;cm farther from the table edge than in simulation.</figcaption>
-  </figure>
-
-  <figure class="wide">
-    <img src="assets/fig_panels.png" alt="Five bar-chart panels comparing reach, support margin, smoothness, hand jitter, and bracing-arm force across simulation and hardware">
-    <figcaption><b>Reach, stability, motion quality, and brace loading in successful runs.</b>
-    Blue: simulation without a brace objective; orange: simulation with brace-encouraging costs;
-    green: hardware. Bracing roughly doubles the support margin at comparable reach
-    (~13&nbsp;cm at the targeted reach, 14&nbsp;cm at max reach on hardware), and hardware brace loads
-    (108&ndash;109&nbsp;N) sit near the top of the simulated braced range. Hardware hand-jitter
-    bars include state-estimation noise absent from simulation.</figcaption>
+    <img src="assets/fig_stages.png" alt="Four stages of leaning and reaching on the real Unitree H1-2 (top row) and in MuJoCo simulation (bottom row): stand, lean and brace, reach, recover">
+    <figcaption><b>Four stages of leaning and reaching,</b> real (top) and simulation (bottom): stand,
+    lean onto the forearm brace, reach, and push back to standing. With sampling-based MPC the robot
+    holds the 1.3&nbsp;m reaching stage, more than 40&nbsp;cm past the unbraced standing reach of
+    &asymp;80&nbsp;cm, for over four minutes. The forearm pad carries 109&nbsp;&plusmn;&nbsp;28&nbsp;N
+    on hardware and 105&nbsp;N in simulation.</figcaption>
   </figure>
 
   <figure class="fig-narrow">
-    <img src="assets/fig_precision.png" alt="Ensemble plot of gripper tip error in x, y, and z during the five-second hold across ten trials">
-    <figcaption><b>Target precision.</b> Gripper-tip error during the commanded 5&nbsp;s hold at a
-    fixed Cartesian target 0.55&nbsp;m past the table edge, across 10 consecutive autonomous
-    trials: 2.8&nbsp;&plusmn;&nbsp;1.3&nbsp;cm transverse tracking precision. Within each
-    hold the tip is steady to under a centimeter.</figcaption>
+    <img src="assets/fig_panels.png" alt="Four bar-chart panels comparing reach, support margin, hand jitter, and bracing-arm force between simulation and hardware for the targeted reach and the max reach">
+    <figcaption><b>Reach, stability, hand jitter, and brace loading in successful runs.</b> Each
+    panel reports the commanded-target reach (left pair) and the maximum-extent reach (right pair)
+    in simulation (orange) and on hardware (green); bars are medians over successful trials, whiskers
+    the half-ranges. Simulation and hardware reach the same distance (99 vs 101&nbsp;cm targeted,
+    123 vs 130&nbsp;cm at max reach, tip from the ankle midpoint) and agree on the wrench-space
+    support margin (13.2 vs 12.7&nbsp;cm targeted, 16.0 vs 11.7&nbsp;cm at max reach). The simulated
+    arm loads the brace harder (182 and 174&nbsp;N) than the deployed arm (121 and 124&nbsp;N), which
+    saturates near its shoulder-pitch torque limit. Both use the same 37&nbsp;cm ankle-to-edge
+    stance.</figcaption>
+  </figure>
+
+  <figure class="wide">
+    <img src="assets/fig_grid.png" alt="Experimental setup photo and three top-down scatter plots of wrist-camera measured hold positions around six targets at table heights 0.935, 0.985 and 1.035 m">
+    <figcaption><b>Commanded reaching across table heights and targets.</b> The same controller,
+    with no cost weight or parameter change, is commanded to six targets on a
+    20&nbsp;&times;&nbsp;10&nbsp;cm grid at three table heights (0.935, 0.985, 1.035&nbsp;m), three
+    trials per condition. Dots are wrist-camera measured hold positions, crosses the targets, dotted
+    circles a 4&nbsp;cm radius, and &times; the conditions where the brace failed before the reach.
+    All 36 holds succeed at the two lower heights; at the tallest table the two deeper lateral targets
+    exceed the current bracing workspace (12/18). Across the 48 completed holds the mean 3D target
+    error is 2.7&nbsp;&plusmn;&nbsp;0.9&nbsp;cm, with 44/48 within 4&nbsp;cm.</figcaption>
+  </figure>
+
+  <div class="split">
+    <figure>
+      <img src="assets/fig_precision.png" alt="Wrist-camera tip error in the lateral, height, and depth axes over the 5-second hold, mean and one standard deviation over 47 holds">
+      <figcaption><b>Gripper-tip tracking during the hold.</b> Wrist-camera tip error relative to
+      the aim point through the 5&nbsp;s hold, mean&nbsp;&plusmn;&nbsp;1&nbsp;sd over the hardware holds
+      across six targets and three table heights. The grasp-critical lateral and height axes stay
+      centred at +0.2&nbsp;&plusmn;&nbsp;1.3 and +1.1&nbsp;&plusmn;&nbsp;1.3&nbsp;cm; depth carries a
+      small bias (&minus;1.4&nbsp;&plusmn;&nbsp;1.3&nbsp;cm) as the hand drives in along the
+      approach.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/fig_ablation.png" alt="Brace-hold success rate on hardware versus the number of active brace cost terms, rising from 33 percent at zero terms to 100 percent at nine">
+      <figcaption><b>Brace-cost ablation on hardware.</b> Brace-hold success (a stable, loaded
+      forearm seat) versus the number of active brace cost terms, Wilson 95% intervals with per-point
+      n. The keyframe prior aims the arm at the table even with no brace term (33%); the brace terms
+      shape the seat, rising to 56% (24/43) with six terms and 100% (15/15) with the full
+      nine.</figcaption>
+    </figure>
+  </div>
+
+  <figure class="fig-narrow">
+    <img src="assets/fig_failure.png" alt="Two time-series panels over hardware trials: CoM support margin and reconstructed forearm contact force, successes versus failures">
+    <figcaption><b>What separates successes from failures.</b> Over the 15 max-reach hardware
+    trials (11 successes, 4 failures), time normalized to the commanded phase boundaries. Top:
+    minimum distance from the CoM projection to the foot-only support polygon; both groups leave it
+    while braced, successes recover a positive margin through release, failures drift to
+    &asymp;&minus;0.14&nbsp;m before the emergency stop. Bottom: forearm normal force reconstructed
+    quasi-statically from the bracing-arm joint torques (4.3&nbsp;N RMSE against simulation ground
+    truth). Successes load progressively to &asymp;125&nbsp;N and unload gradually; failures develop
+    &asymp;150&nbsp;N at brace onset and hold a variable 100&ndash;150&nbsp;N until collapse.</figcaption>
+  </figure>
+
+  <figure class="fig-narrow">
+    <img src="assets/fig_planners.png" alt="Planner ablation: completion grids over sampling standard deviation and plan rate for CEM, predictive sampling and MPPI, plus success under plant mass, stiffness and friction mismatch">
+    <figcaption><b>Sampling-based planner sensitivity.</b> (a) Completion over sampling standard
+    deviation and plan rate for CEM, predictive sampling, and MPPI (six seeds per cell), plus the
+    elite count, temperature, and rollout count at 33 plans/s. CEM succeeds in 16/20 noise&ndash;rate
+    conditions against 12/20 for PS and 10/20 for MPPI. (b) Completion at 33 plans/s when the plant
+    mass, joint stiffness, or friction differs from the planner model: CEM completes 80/108 trials,
+    iCEM 62/108, PS 47/108, MPPI 42/108. Mass error is hard for every planner; elite averaging gives
+    CEM the widest operating range.</figcaption>
   </figure>
 </section>
 
