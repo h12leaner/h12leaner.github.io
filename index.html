@@ -47,8 +47,8 @@
   whole-body humanoid control aim at avoiding contact, contact is needed to reach objects that are
   not directly placed at the edge of a table. We employ a sampling-based model-predictive control
   (MPC) framework for whole-body leaning, bracing, reaching, and recovery on a Unitree H1-2 humanoid.
-  The controller runs in real time at 33&nbsp;Hz, transfers sim-to-real, extends reach by more than
-  40&nbsp;cm beyond the unbraced standing workspace, and sustains the loaded posture for over four
+  The controller runs in real time at 33&nbsp;Hz, transfers sim-to-real, extends reach by &asymp;50&nbsp;cm
+  beyond the unbraced standing workspace, and sustains the loaded posture for over four
   minutes, before pose estimation drifts. The controller reaches the commanded target in 89% of
   trials and completes the full reach-and-recovery cycle in 81%, across 54 trials spanning six
   targets and three table heights. We further characterize stability, contact loading, and
@@ -57,7 +57,7 @@
 
 <section class="col" aria-label="Headline results">
   <ul class="ledger">
-    <li><span class="ledger-label">Reach beyond the unbraced standing workspace</span><span class="ledger-value">+40&thinsp;cm</span></li>
+    <li><span class="ledger-label">Reach beyond the unbraced standing workspace</span><span class="ledger-value">+50&thinsp;cm</span></li>
     <li><span class="ledger-label">Loaded posture sustained</span><span class="ledger-value">4+&thinsp;min</span></li>
     <li><span class="ledger-label">Commanded reaches completed (48/54, six targets &times; three table heights)</span><span class="ledger-value">89&thinsp;%</span></li>
     <li><span class="ledger-label">Full reach-and-recovery cycles (44/54)</span><span class="ledger-value">81&thinsp;%</span></li>
